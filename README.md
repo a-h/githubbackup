@@ -4,13 +4,24 @@ A Docker image for backing up Github repositories.
 
 ## Usage
 
-```
+```yaml
 name: Backup
 
 on:
   workflow_dispatch:
   schedule:
     - cron: '0 0 * * *'
+
+permissions:
+  id-token: write
+  contents: read
+
+      # Needs secrets:
+      # BACKUP_GITHUB_PAT
+      # BACKUP_GITHUB_OWNER
+      # BACKUP_AWS_ROLE
+      # BACKUP_AWS_REGION
+      # BACKUP_BUCKET_NAME
 
 jobs:
   Backup:
@@ -19,22 +30,23 @@ jobs:
     name: Backup
 
     steps:
-      - uses: actions/checkout@v2
-
-      - name: Download
-        shell: bash
-        run: download-organisation-code
-      
       - name: Assume role
         uses: aws-actions/configure-aws-credentials@v1
         with:
-          role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/github-backup-role
-          aws-region: eu-west-1
+          role-to-assume: ${{ secrets.BACKUP_AWS_ROLE }}
+          aws-region: ${{ secrets.BACKUP_AWS_REGION }}
 
       - name: Display assumed role
         run: aws sts get-caller-identity
 
-      #TODO: Upload the code to S3.
+      - name: Backup
+        shell: bash
+        env:
+          BACKUP_GITHUB_PAT: ${{ secrets.BACKUP_GITHUB_PAT }}
+          BACKUP_GITHUB_OWNER: ${{ secrets.BACKUP_GITHUB_OWNER }}
+          BACKUP_AWS_REGION: ${{ secrets.BACKUP_AWS_REGION }}
+          BACKUP_BUCKET_NAME: ${{ secrets.BACKUP_BUCKET_NAME }}
+        run: backup-organisation-code
 ```
 
 ## Tasks
