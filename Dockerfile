@@ -27,5 +27,5 @@ RUN curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | d
     apt update && \
     apt-get -y install gh
 
-COPY download-organisation-code.sh /usr/bin/download-organisation-code
+COPY backup-organisation-code.sh /usr/bin/backup-organisation-code
 WORKDIR /src
