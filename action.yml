@@ -1,0 +1,5 @@
+name: Github S3 backup
+description: Backup code to S3.
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
