@@ -50,3 +50,9 @@ docker build --progress=plain -t githubbackup:latest .
 ```sh
 docker run -it --rm --entrypoint "/bin/bash" githubbackup:latest
 ```
+
+### run-locally
+
+```sh
+docker run -e BACKUP_GITHUB_PAT -e BACKUP_AWS_ROLE -e BACKUP_AWS_REGION -e BACKUP_BUCKET_NAME githubbackup:latest backup-organisation-code
+```
