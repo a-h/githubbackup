@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # https://gist.github.com/mohanpedala/1e2ff5661761d3abd0385e8223e16425
-set -euxo pipefail
+#set -euxo pipefail
 
 echo "Logging in with personal access token."
 export GH_TOKEN=$BACKUP_GITHUB_PAT
