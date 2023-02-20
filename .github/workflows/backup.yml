@@ -40,4 +40,4 @@ jobs:
           BACKUP_AWS_REGION: ${{ secrets.BACKUP_AWS_REGION }}
           BACKUP_BUCKET_NAME: ${{ secrets.BACKUP_BUCKET_NAME }}
         run: |
-          backup-organisation-code.sh
+          backup-organisation-code
