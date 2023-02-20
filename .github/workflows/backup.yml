@@ -1,0 +1,42 @@
+name: Backup
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 0 * * *'
+
+permissions:
+  id-token: write
+  contents: read
+
+      # Needs secrets:
+      # BACKUP_GITHUB_PAT
+      # BACKUP_GITHUB_OWNER
+      # BACKUP_AWS_ROLE
+      # BACKUP_AWS_REGION
+      # BACKUP_BUCKET_NAME
+
+jobs:
+  Backup:
+    runs-on: ubuntu-latest
+    container: ghcr.io/dms-jovan-stanoevski/githubbackup:main
+    name: Backup
+
+    steps:
+      - name: Assume role
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: ${{ secrets.BACKUP_AWS_ROLE }}
+          aws-region: ${{ secrets.BACKUP_AWS_REGION }}
+
+      - name: Display assumed role
+        run: aws sts get-caller-identity
+
+      - name: Backup
+        shell: bash
+        env:
+          BACKUP_GITHUB_PAT: ${{ secrets.BACKUP_GITHUB_PAT }}
+          BACKUP_GITHUB_OWNER: ${{ secrets.BACKUP_GITHUB_OWNER }}
+          BACKUP_AWS_REGION: ${{ secrets.BACKUP_AWS_REGION }}
+          BACKUP_BUCKET_NAME: ${{ secrets.BACKUP_BUCKET_NAME }}
+        run: backup-organisation-code
