@@ -33,7 +33,7 @@ jobs:
         run: aws sts get-caller-identity
 
       - name: Backup
-        shell: bash
+        shell: bash {0}
         env:
           BACKUP_GITHUB_PAT: ${{ secrets.BACKUP_GITHUB_PAT }}
           BACKUP_GITHUB_OWNER: ${{ secrets.BACKUP_GITHUB_OWNER }}
