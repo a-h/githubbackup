@@ -26,7 +26,7 @@ permissions:
 jobs:
   Backup:
     runs-on: ubuntu-latest
-    container: ghcr.io/a-h/githubbackup:main
+    container: ghcr.io/dms-jovan-stanoevski/githubbackup:main
     name: Backup
 
     steps:
