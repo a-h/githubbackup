@@ -8,7 +8,7 @@ export GH_TOKEN=$BACKUP_GITHUB_PAT
 gh auth setup-git
 
 echo "Downloading repositories for" $BACKUP_GITHUB_OWNER
-gh repo list $BACKUP_GITHUB_OWNER --json "name" --limit 1000 --template '{{range .}}{{ .name }}{{"\n"}}{{end}}' | xargs -L1 -I {} gh repo clone $BACKUP_GITHUB_OWNER/{}
+gh repo list $BACKUP_GITHUB_OWNER --json "name" --limit 1000 --template '{{range .}}{{ .name }}{{"\n"}}{{end}}' | xargs -L1 -I {} gh repo clone --mirror $BACKUP_GITHUB_OWNER/{} .git | git config --bool core.bare false | git reset -hard
 
 echo "Downloaded repositories..."
 find  . -maxdepth 1 -type d
@@ -48,7 +48,7 @@ for output_repo_list in $repository_name_list
         clone_repository_name="$(echo "$output_json" | python3 -c "import sys, json; print(json.load(sys.stdin)['repositoryMetadata']['repositoryDescription'])")"
         echo $clone_repository_name
         cd $clone_repository_name
-	git remote add sync $clone_url
+	    git remote add sync $clone_url
         git push sync --mirror
 	cd ..
 done
