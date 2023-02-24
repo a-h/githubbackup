@@ -10,7 +10,7 @@ gh auth setup-git
 echo "Downloading repositories for" $BACKUP_GITHUB_OWNER
 #gh repo list $BACKUP_GITHUB_OWNER --json "name" --limit 1000 --template '{{range .}}{{ .name }}{{"\n"}}{{end}}' | xargs -L1 -I {} gh repo clone --mirror $BACKUP_GITHUB_OWNER/{} .git | git config --bool core.bare false | git reset -hard
 gh repo list $BACKUP_GITHUB_OWNER --json "name" --limit 1000 --template '{{range .}}{{ .name }}{{"\n"}}{{end}}' | xargs -L1 -I {} git clone --mirror https://${BACKUP_GITHUB_OWNER}:{BACKUP_GITHUB_PAT}@github.com/$BACKUP_GITHUB_OWNER/{} 
-for f in *; do mkdir -p $f/.git ; done
+for f in *; do mkdir -p .git; 'cp' -r $f ../.git ; done
 
 echo "Downloaded repositories..."
 find  . -maxdepth 1 -type d
