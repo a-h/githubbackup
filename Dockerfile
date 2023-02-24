@@ -1,7 +1,7 @@
 FROM ubuntu:latest AS downloads
 
 RUN apt-get update && \
-    apt-get -y install curl unzip
+    apt-get -y install curl unzip python3
 
 # https://explainshell.com/explain?cmd=curl+-fsSLO+example.org
 WORKDIR /downloads
