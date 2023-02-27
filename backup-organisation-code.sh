@@ -12,7 +12,9 @@ echo "Downloading repositories for" $BACKUP_GITHUB_OWNER
 
 gh repo list $BACKUP_GITHUB_OWNER --json "name" --limit 1000 --template '{{range .}}{{ .name }}{{"\n"}}{{end}}' | xargs -L1 -I {} git clone --mirror https://${BACKUP_GITHUB_OWNER}:{BACKUP_GITHUB_PAT}@github.com/$BACKUP_GITHUB_OWNER/{} 
 
-for f in *; do mkdir -p ./.git; 'cp' -r $f ./.git ; done
+for f in */; do mkdir -p $f/.git; done
+
+for d in *; do echo "$d"; cp -avr $d/* $d/.git; done
 
 echo "Downloaded repositories..."
 find  . -maxdepth 1 -type d
@@ -49,10 +51,13 @@ for output_repo_list in $repository_name_list
         output_json="$(aws codecommit get-repository --repository-name "$BACKUP_GITHUB_OWNER"-"$output_repo_list")"
         clone_url="$(echo "$output_json" | python3 -c "import sys, json; print(json.load(sys.stdin)['repositoryMetadata']['cloneUrlHttp'])")"
 	echo $clone_url
-        clone_repository_name="$(echo "$output_json" | python3 -c "import sys, json; print(json.load(sys.stdin)['repositoryMetadata']['repositoryDescription'])")"
+        clone_repository_name="$(echo "$output_json" | python3 -c "import sys, json; print(json.load(sys.stdin)['repositoryMetadata']['repositoryDescription'])").git"
         echo $clone_repository_name
         cd $clone_repository_name
-	    git remote add sync $clone_url
+        git remote add sync $clone_url
+        git config --unset core.bare
+        git reset --hard
         git push sync --mirror
-	cd ..
+        cd ..
 done
+#Complete
