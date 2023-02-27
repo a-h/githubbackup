@@ -1,4 +1,4 @@
-name: Backup
+name: Backup GitHub Org/Repos to AWS S3 with Automatic creation of AWS CodeCommit Repos
 env:
   BACKUP_GITHUB_PAT: ${{ secrets.BACKUP_GITHUB_PAT }}
   BACKUP_GITHUB_OWNER: ${{ secrets.BACKUP_GITHUB_OWNER }}
